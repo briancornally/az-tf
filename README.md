@@ -50,8 +50,8 @@ terraform apply -auto-approve
 ### Test - vm - ssh
 
 ```bash
-LB_FQDN=$(az network public-ip show --ids $LB_PIP_ID --query dnsSettings.fqdn -o tsv) && echo LB_FQDN=$LB_FQDN
 LB_PIP_ID=$(terraform output -raw lb_pip_id ) && echo LB_PIP_ID=$LB_PIP_ID
+LB_FQDN=$(az network public-ip show --ids $LB_PIP_ID --query dnsSettings.fqdn -o tsv) && echo LB_FQDN=$LB_FQDN
 VM_USERNAME=$(yq .vmss.username cfg.global.yml) && echo VM_USERNAME=$VM_USERNAME
 open http://$LB_FQDN # confirm nginx page
 ssh -i ~/.ssh/az-tf.id_ed25519.pem -o "StrictHostKeyChecking no" $VM_USERNAME@$LB_FQDN -p 50000
@@ -82,12 +82,17 @@ ssh -i ~/.ssh/az-tf.id_ed25519.pem -o "StrictHostKeyChecking no" -p 50000 $VM_US
 
 - Create multi-environment GitHub Action
 - add sqlcmd install & db test to [web.conf](web.conf) cloudinit
+- VMSS auto-scaling
 
 ## References
 
 - https://github.com/Azure/terraform-azurerm-caf-enterprise-scale/blob/main/modules/connectivity/locals.geo_codes.tf.json region code lookup
 - https://github.com/Azure/terraform/tree/master/quickstart/201-private-link-sql-database
 - https://github.com/hashicorp-education/learn-terraform-azure-scale-sets
+
+## URL
+
+- [http://tf121-dev-ne-rg.northeurope.cloudapp.azure.com/](http://tf121-dev-ne-rg.northeurope.cloudapp.azure.com/)
 
 ## Deploy Log
 

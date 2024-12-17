@@ -46,6 +46,8 @@ resource "azurerm_orchestrated_virtual_machine_scale_set" "this" {
   platform_fault_domain_count = 1     # For zonal deployments, this must be set to 1
   zones                       = ["1"] # Zones required to lookup zone in the startup script
   tags                        = local.tags
+  # eviction_policy             = "Deallocate"
+  # priority                    = "Spot"
 
   user_data_base64 = base64encode(file("web.conf"))
   os_profile {
