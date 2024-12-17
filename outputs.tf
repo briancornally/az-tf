@@ -26,6 +26,10 @@ output "azurerm_mssql_database_id" {
   value = azurerm_mssql_database.this.id
 }
 
-# output "vm_id" {
-#   value = azurerm_linux_virtual_machine.vm.id
-# }
+output "lb_pip_id" {
+  value = azurerm_public_ip.lb_pip.id
+}
+
+output "vmss_id" {
+  value = azurerm_orchestrated_virtual_machine_scale_set.this.id
+}

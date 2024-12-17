@@ -16,6 +16,7 @@ resource "azurerm_public_ip" "lb_pip" {
   sku                 = "Standard"
   zones               = ["1", "2", "3"]
   domain_name_label   = data.azurerm_resource_group.this.name
+  tags                = local.tags
 }
 
 module "lb_name" {
@@ -37,6 +38,7 @@ resource "azurerm_lb" "lb" {
     name                 = "PublicIP"
     public_ip_address_id = azurerm_public_ip.lb_pip.id
   }
+  tags = local.tags
 }
 
 resource "azurerm_lb_backend_address_pool" "bepool" {
@@ -65,18 +67,9 @@ resource "azurerm_lb_probe" "this" {
   request_path    = "/"
 }
 
-module "nat_rule_ssh_name" {
-  source         = "./modules/resource_naming"
-  prefix         = local.cfg.prefix
-  env_name       = local.env_name
-  location       = local.cfg.location
-  resource_type  = "nat"
-  instance_index = "ssh"
-}
-
 # add lb nat rules to allow ssh access to the backend instances
 resource "azurerm_lb_nat_rule" "ssh" {
-  name                           = module.nat_rule_ssh_name.name
+  name                           = "ssh"
   resource_group_name            = data.azurerm_resource_group.this.name
   loadbalancer_id                = azurerm_lb.lb.id
   protocol                       = "Tcp"
@@ -103,16 +96,27 @@ resource "azurerm_public_ip" "natgw" {
   allocation_method   = "Static"
   sku                 = "Standard"
   zones               = ["1"]
+  tags                = local.tags
+}
+
+module "nat_gateway_name" {
+  source         = "./modules/resource_naming"
+  prefix         = local.cfg.prefix
+  env_name       = local.env_name
+  location       = local.cfg.location
+  resource_type  = "nat_gateway"
+  instance_index = "01"
 }
 
 # add nat gateway to enable outbound traffic from the backend instances
 resource "azurerm_nat_gateway" "this" {
-  name                    = "nat-Gateway"
+  name                    = module.nat_gateway_name.name
   location                = data.azurerm_resource_group.this.location
   resource_group_name     = data.azurerm_resource_group.this.name
   sku_name                = "Standard"
   idle_timeout_in_minutes = 10
   zones                   = ["1"]
+  tags                    = local.tags
 }
 
 resource "azurerm_subnet_nat_gateway_association" "this" {

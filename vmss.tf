@@ -16,6 +16,7 @@ resource "azurerm_storage_account" "vmss_diag_sa" {
   resource_group_name      = data.azurerm_resource_group.this.name
   account_tier             = "Standard"
   account_replication_type = "LRS"
+  tags                     = local.tags
 }
 
 module "vmss_name" {
@@ -27,32 +28,42 @@ module "vmss_name" {
   instance_index = "01"
 }
 
+module "vmss_nic_name" {
+  source         = "./modules/resource_naming"
+  prefix         = local.cfg.prefix
+  env_name       = local.env_name
+  location       = local.cfg.location
+  resource_type  = "vmss-nic"
+  instance_index = "01"
+}
+
 resource "azurerm_orchestrated_virtual_machine_scale_set" "this" {
   name                        = module.vmss_name.name
   location                    = data.azurerm_resource_group.this.location
   resource_group_name         = data.azurerm_resource_group.this.name
-  sku_name                    = local.cfg.vm.sku_name
-  instances                   = 3
+  sku_name                    = local.cfg.vmss.sku_name
+  instances                   = local.cfg.vmss.instances
   platform_fault_domain_count = 1     # For zonal deployments, this must be set to 1
   zones                       = ["1"] # Zones required to lookup zone in the startup script
+  tags                        = local.tags
 
   user_data_base64 = base64encode(file("web.conf"))
   os_profile {
     linux_configuration {
       disable_password_authentication = true
-      admin_username                  = local.cfg.vm.username
+      admin_username                  = local.cfg.vmss.username
       admin_ssh_key {
-        username   = local.cfg.vm.username
+        username   = local.cfg.vmss.username
         public_key = file("~/.ssh/az-tf.id_ed25519.pem.pub")
       }
     }
   }
 
   source_image_reference {
-    publisher = local.cfg.vm.image_publisher
-    offer     = local.cfg.vm.image_offer
-    sku       = local.cfg.vm.image_sku
-    version   = local.cfg.vm.image_version
+    publisher = local.cfg.vmss.image_publisher
+    offer     = local.cfg.vmss.image_offer
+    sku       = local.cfg.vmss.image_sku
+    version   = local.cfg.vmss.image_version
   }
   os_disk {
     storage_account_type = "Standard_LRS"
@@ -60,7 +71,7 @@ resource "azurerm_orchestrated_virtual_machine_scale_set" "this" {
   }
 
   network_interface {
-    name                          = "nic"
+    name                          = module.vmss_nic_name.name
     primary                       = true
     enable_accelerated_networking = false
 

@@ -21,8 +21,8 @@ for LOCATION in ${LOCATIONS[@]}; do
 	LOCATION_SHORT=$(LOCATION=$LOCATION yq -r '.locals.builtin_azure_backup_geo_codes[env(LOCATION)]' $LOOKUP_JSON_FILE)
 	LOCATION_YML=cfg.location-$LOCATION_SHORT.yml && touch $LOCATION_YML && sort-yml $LOCATION_YML
 	for ENV_NAME in ${ENV_NAMES[@]}; do
-		RESOURCE_GROUP_NAME=$PREFIX-$LOCATION_SHORT-$ENV_NAME-rg
-		ENV_YML=cfg.env-${LOCATION_SHORT}-${ENV_NAME}.yml && touch $ENV_YML
+		RESOURCE_GROUP_NAME=$PREFIX-$ENV_NAME-$LOCATION_SHORT-rg
+		ENV_YML=cfg.env-${ENV_NAME}-${LOCATION_SHORT}.yml && touch $ENV_YML
 		RESOURCE_GROUP_NAME=$RESOURCE_GROUP_NAME yq -i '.resource_group_name=env(RESOURCE_GROUP_NAME)' $ENV_YML
 		sort-yml $ENV_YML
 		az group create --location $LOCATION --name $RESOURCE_GROUP_NAME

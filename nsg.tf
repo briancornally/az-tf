@@ -11,6 +11,7 @@ resource "azurerm_network_security_group" "web_nsg" {
   name                = module.web_nsg_name.name
   location            = data.azurerm_resource_group.this.location
   resource_group_name = data.azurerm_resource_group.this.name
+  tags                = local.tags
 
   security_rule {
     name                       = "Allow-HTTP"

@@ -1,4 +1,4 @@
-## Create a Managed SQL Server
+# Create a Managed SQL Server
 
 module "mssql_server_name" {
   source         = "./modules/resource_naming"
@@ -17,9 +17,10 @@ resource "azurerm_mssql_server" "this" {
   administrator_login           = local.cfg.mssql.admin_username
   administrator_login_password  = var.mssql_server_admin_password
   public_network_access_enabled = false
+  tags                          = local.tags
 }
 
-## Create a Managed SQL Database
+# Create a Managed SQL Database
 
 module "mssql_database_name" {
   source         = "./modules/resource_naming"
@@ -41,6 +42,7 @@ resource "azurerm_mssql_database" "this" {
   zone_redundant              = false
   auto_pause_delay_in_minutes = 60 # range (60 - 10080) and divisible by 10 - property is only settable for serverless databases
   storage_account_type        = "Local"
+  tags                        = local.tags
 }
 
 # Create private endpoint for SQL server
@@ -58,6 +60,7 @@ resource "azurerm_private_endpoint" "mssql_ep" {
   location            = data.azurerm_resource_group.this.location
   resource_group_name = data.azurerm_resource_group.this.name
   subnet_id           = azurerm_subnet.db_subnet.id
+  tags                = local.tags
 
   private_service_connection {
     name                           = "mssql-private-serviceconnection"
@@ -76,6 +79,7 @@ resource "azurerm_private_endpoint" "mssql_ep" {
 resource "azurerm_private_dns_zone" "this" {
   name                = "privatelink.database.windows.net"
   resource_group_name = data.azurerm_resource_group.this.name
+  tags                = local.tags
 }
 
 # Create virtual network link
@@ -84,4 +88,5 @@ resource "azurerm_private_dns_zone_virtual_network_link" "this" {
   resource_group_name   = data.azurerm_resource_group.this.name
   private_dns_zone_name = azurerm_private_dns_zone.this.name
   virtual_network_id    = azurerm_virtual_network.this.id
+  tags                  = local.tags
 }
