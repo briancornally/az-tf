@@ -26,6 +26,6 @@ output "azurerm_mssql_database_id" {
   value = azurerm_mssql_database.this.id
 }
 
-output "vm_id" {
-  value = azurerm_linux_virtual_machine.vm.id
-}
+# output "vm_id" {
+#   value = azurerm_linux_virtual_machine.vm.id
+# }
