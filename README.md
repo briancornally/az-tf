@@ -1,9 +1,10 @@
 # Azure Terraform Sample
 
-## Naming
+## Naming Convention
 
-- `${prefix}-${env_name}-${geo_codes[location]}-${resource_type}-${instance_index}`
-- see: [resource_naming module](modules/resource_naming/outputs.tf)
+`${prefix}-${env_name}-${location_code}-${resource_type}-${instance_index}`
+
+see: [resource_naming module](modules/resource_naming/README.md)
 
 ## Select Workspace
 
