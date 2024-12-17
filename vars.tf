@@ -11,3 +11,8 @@ locals {
     project     = local.cfg.project
   }
 }
+
+variable "mssql_server_admin_password" {
+  sensitive   = true
+  description = "from shell TF_VAR_mssql_server_admin_password"
+}
