@@ -20,16 +20,57 @@ see: [resource_naming module](modules/resource_naming/README.md)
 
 ### Select Workspace
 
-- environment name
+- location code and environment names are parsed from workspace name by terraform `vars.tf`
 
 ```bash
 export TF_WORKSPACE=ne-dev
 export TF_VAR_mssql_server_admin_password='xxx'
+ssh-keygen -m PEM -t ed25519 -f ~/.ssh/az-tf.id_ed25519.pem
 ```
 
-- location and environment are parsed from workspace name by terraform
+### Initialize
 
-###
+```bash
+terraform init -upgrade -migrate-state -force-copy
+```
+
+### Apply
+
+```bash
+terraform apply -auto-approve
+```
+
+### Test - sqlcmd - generate
+
+- https://learn.microsoft.com/en-us/sql/tools/sqlcmd/sqlcmd-utility?view=sql-server-ver16&tabs=go%2Cwindows&pivots=cs1-bash
+- https://learn.microsoft.com/en-us/azure/synapse-analytics/sql-data-warehouse/sql-data-warehouse-get-started-connect-sqlcmd
+
+```bash
+AZURERM_MSSQL_DATABASE_NAME=$(terraform output -raw azurerm_mssql_database_id | awk -F/ '{print $NF}')
+AZURERM_MSSQL_SERVER_NAME=$(terraform output -raw azurerm_mssql_server_id | awk -F/ '{print $NF}')
+MSSQL_ADMIN_USERNAME=$(yq .mssql.admin_username cfg.global.yml)
+echo sqlcmd -S $AZURERM_MSSQL_SERVER_NAME.database.windows.net -d $AZURERM_MSSQL_DATABASE_NAME -U $MSSQL_ADMIN_USERNAME -P \'$TF_VAR_mssql_server_admin_password\' -I | tee private-sql.sh | pbcopy && pbpaste
+```
+
+### Test - vm - ssh
+
+```bash
+VM_ID=$(terraform output -raw vm_id)
+VM_PIP=$(az vm list-ip-addresses --ids $VM_ID --query "[].virtualMachine.network.publicIpAddresses[0].ipAddress" --output tsv)
+VM_USERNAME=$(yq .vm.username cfg.global.yml)
+echo ssh -i ~/.ssh/az-tf.id_ed25519.pem -o "StrictHostKeyChecking no" $VM_USERNAME@$VM_PIP
+```
+
+### Test - sqlcmd - test
+
+- ssh to VM & invoke:
+
+```bash
+curl https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc
+sudo add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/20.04/prod.list)"
+sudo apt-get update
+sudo apt-get install sqlcmd
+```
 
 ## References
 
