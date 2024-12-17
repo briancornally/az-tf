@@ -21,7 +21,7 @@
 - this approach
   - minimizes the configuration at the cost of additional lines of HCL
   - facilitates naming convention changes by change module & recreate
-- to accomodate inconsistent naming deprecate the resource_naming module and add the resource names to the yml configuration files
+- if necessary to accomodate inconsistent naming of existing resources => deprecate the resource_naming module and add the resource names to the yml configuration files
 
 ## Procedure
 
@@ -30,7 +30,7 @@
 - location code and environment names are parsed from workspace name by terraform `vars.tf`
 
 ```bash
-export TF_WORKSPACE=ne-dev
+export TF_WORKSPACE=dev-ne
 export TF_VAR_mssql_server_admin_password='xxx'
 ssh-keygen -m PEM -t ed25519 -f ~/.ssh/az-tf.id_ed25519.pem
 ```
@@ -67,8 +67,6 @@ exit
 ssh -i ~/.ssh/az-tf.id_ed25519.pem -o "StrictHostKeyChecking no" -p 50000 $VM_USERNAME@$LB_FQDN 'curl https://packages.microsoft.com/keys/microsoft.asc | sudo tee /etc/apt/trusted.gpg.d/microsoft.asc && sudo add-apt-repository "$(wget -qO- https://packages.microsoft.com/config/ubuntu/20.04/prod.list)" --yes && sudo apt-get update && sudo apt-get install sqlcmd'
 ```
 
-- future development: add to [web.conf](web.conf) cloudinit
-
 - test SQL via sqlcmd
 
 ```bash
@@ -80,13 +78,20 @@ scp -i ~/.ssh/az-tf.id_ed25519.pem -o "StrictHostKeyChecking no" -P 50000 privat
 ssh -i ~/.ssh/az-tf.id_ed25519.pem -o "StrictHostKeyChecking no" -p 50000 $VM_USERNAME@$LB_FQDN sh private-sql.sh
 ```
 
-- future development: add to [web.conf](web.conf) cloudinit
+## Future developments
+
+- Create multi-environment GitHub Action
+- add sqlcmd install & db test to [web.conf](web.conf) cloudinit
 
 ## References
 
 - https://github.com/Azure/terraform-azurerm-caf-enterprise-scale/blob/main/modules/connectivity/locals.geo_codes.tf.json region code lookup
 - https://github.com/Azure/terraform/tree/master/quickstart/201-private-link-sql-database
 - https://github.com/hashicorp-education/learn-terraform-azure-scale-sets
+
+## Deploy Log
+
+- [tf121-dev-ne-rg.log](./tf121-dev-ne-rg.log)
 
 ## Azure Resource Visualizer
 

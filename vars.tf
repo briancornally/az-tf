@@ -1,6 +1,6 @@
 locals {
-  location_code = split("-", terraform.workspace)[0]
-  env_name      = split("-", terraform.workspace)[1]
+  env_name      = split("-", terraform.workspace)[0]
+  location_code = split("-", terraform.workspace)[1]
   global_obj    = yamldecode(file("cfg.global.yml"))
   location_obj  = yamldecode(file("cfg.location-${local.location_code}.yml"))
   env_obj       = yamldecode(file("cfg.env-${local.env_name}-${local.location_code}.yml"))

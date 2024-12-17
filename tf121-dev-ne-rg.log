@@ -1,0 +1,757 @@
+data.azurerm_resource_group.this: Reading...
+data.azurerm_resource_group.this: Read complete after 0s [id=/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+   create
+
+Terraform will perform the following actions:
+
+  # azurerm_lb.lb will be created
+   resource "azurerm_lb" "lb" {
+       id                   = (known after apply)
+       location             = "northeurope"
+       name                 = "tf121-dev-ne-lb-01"
+       private_ip_address   = (known after apply)
+       private_ip_addresses = (known after apply)
+       resource_group_name  = "tf121-dev-ne-rg"
+       sku                  = "Standard"
+       sku_tier             = "Regional"
+       tags                 = {
+           "environment" = "dev"
+           "location"    = "ne"
+           "project"     = "azTf121"
+        }
+
+       frontend_ip_configuration {
+           gateway_load_balancer_frontend_ip_configuration_id = (known after apply)
+           id                                                 = (known after apply)
+           inbound_nat_rules                                  = (known after apply)
+           load_balancer_rules                                = (known after apply)
+           name                                               = "PublicIP"
+           outbound_rules                                     = (known after apply)
+           private_ip_address                                 = (known after apply)
+           private_ip_address_allocation                      = (known after apply)
+           private_ip_address_version                         = (known after apply)
+           public_ip_address_id                               = (known after apply)
+           public_ip_prefix_id                                = (known after apply)
+           subnet_id                                          = (known after apply)
+        }
+    }
+
+  # azurerm_lb_backend_address_pool.bepool will be created
+   resource "azurerm_lb_backend_address_pool" "bepool" {
+       backend_ip_configurations = (known after apply)
+       id                        = (known after apply)
+       inbound_nat_rules         = (known after apply)
+       load_balancing_rules      = (known after apply)
+       loadbalancer_id           = (known after apply)
+       name                      = "BackendAddressPool"
+       outbound_rules            = (known after apply)
+    }
+
+  # azurerm_lb_nat_rule.ssh will be created
+   resource "azurerm_lb_nat_rule" "ssh" {
+       backend_address_pool_id        = (known after apply)
+       backend_ip_configuration_id    = (known after apply)
+       backend_port                   = 22
+       enable_floating_ip             = (known after apply)
+       frontend_ip_configuration_id   = (known after apply)
+       frontend_ip_configuration_name = "PublicIP"
+       frontend_port_end              = 50119
+       frontend_port_start            = 50000
+       id                             = (known after apply)
+       idle_timeout_in_minutes        = 4
+       loadbalancer_id                = (known after apply)
+       name                           = "ssh"
+       protocol                       = "Tcp"
+       resource_group_name            = "tf121-dev-ne-rg"
+    }
+
+  # azurerm_lb_probe.this will be created
+   resource "azurerm_lb_probe" "this" {
+       id                  = (known after apply)
+       interval_in_seconds = 15
+       load_balancer_rules = (known after apply)
+       loadbalancer_id     = (known after apply)
+       name                = "http-probe"
+       number_of_probes    = 2
+       port                = 80
+       probe_threshold     = 1
+       protocol            = "Http"
+       request_path        = "/"
+    }
+
+  # azurerm_lb_rule.lb will be created
+   resource "azurerm_lb_rule" "lb" {
+       backend_address_pool_ids       = (known after apply)
+       backend_port                   = 80
+       disable_outbound_snat          = false
+       enable_floating_ip             = false
+       frontend_ip_configuration_id   = (known after apply)
+       frontend_ip_configuration_name = "PublicIP"
+       frontend_port                  = 80
+       id                             = (known after apply)
+       idle_timeout_in_minutes        = 4
+       load_distribution              = "Default"
+       loadbalancer_id                = (known after apply)
+       name                           = "http"
+       probe_id                       = (known after apply)
+       protocol                       = "Tcp"
+    }
+
+  # azurerm_mssql_database.this will be created
+   resource "azurerm_mssql_database" "this" {
+       auto_pause_delay_in_minutes                                = 60
+       collation                                                  = "SQL_Latin1_General_CP1_CI_AS"
+       create_mode                                                = "Default"
+       creation_source_database_id                                = (known after apply)
+       enclave_type                                               = (known after apply)
+       geo_backup_enabled                                         = true
+       id                                                         = (known after apply)
+       ledger_enabled                                             = (known after apply)
+       license_type                                               = (known after apply)
+       maintenance_configuration_name                             = (known after apply)
+       max_size_gb                                                = (known after apply)
+       min_capacity                                               = 0.5
+       name                                                       = "tf121-dev-ne-mssql-database-01"
+       read_replica_count                                         = (known after apply)
+       read_scale                                                 = (known after apply)
+       restore_point_in_time                                      = (known after apply)
+       sample_name                                                = (known after apply)
+       secondary_type                                             = (known after apply)
+       server_id                                                  = (known after apply)
+       sku_name                                                   = "GP_S_Gen5_1"
+       storage_account_type                                       = "Local"
+       tags                                                       = {
+           "environment" = "dev"
+           "location"    = "ne"
+           "project"     = "azTf121"
+        }
+       transparent_data_encryption_enabled                        = true
+       transparent_data_encryption_key_automatic_rotation_enabled = false
+       zone_redundant                                             = false
+
+       long_term_retention_policy (known after apply)
+
+       short_term_retention_policy (known after apply)
+
+       threat_detection_policy (known after apply)
+    }
+
+  # azurerm_mssql_server.this will be created
+   resource "azurerm_mssql_server" "this" {
+       administrator_login                  = "sqladmin"
+       administrator_login_password         = (sensitive value)
+       connection_policy                    = "Default"
+       fully_qualified_domain_name          = (known after apply)
+       id                                   = (known after apply)
+       location                             = "northeurope"
+       minimum_tls_version                  = "1.2"
+       name                                 = "tf121-dev-ne-mssql-server-01"
+       outbound_network_restriction_enabled = false
+       primary_user_assigned_identity_id    = (known after apply)
+       public_network_access_enabled        = false
+       resource_group_name                  = "tf121-dev-ne-rg"
+       restorable_dropped_database_ids      = (known after apply)
+       tags                                 = {
+           "environment" = "dev"
+           "location"    = "ne"
+           "project"     = "azTf121"
+        }
+       version                              = "12.0"
+    }
+
+  # azurerm_nat_gateway.this will be created
+   resource "azurerm_nat_gateway" "this" {
+       id                      = (known after apply)
+       idle_timeout_in_minutes = 10
+       location                = "northeurope"
+       name                    = "tf121-dev-ne-nat_gateway-01"
+       resource_group_name     = "tf121-dev-ne-rg"
+       resource_guid           = (known after apply)
+       sku_name                = "Standard"
+       tags                    = {
+           "environment" = "dev"
+           "location"    = "ne"
+           "project"     = "azTf121"
+        }
+       zones                   = [
+           "1",
+        ]
+    }
+
+  # azurerm_nat_gateway_public_ip_association.this will be created
+   resource "azurerm_nat_gateway_public_ip_association" "this" {
+       id                   = (known after apply)
+       nat_gateway_id       = (known after apply)
+       public_ip_address_id = (known after apply)
+    }
+
+  # azurerm_network_security_group.web_nsg will be created
+   resource "azurerm_network_security_group" "web_nsg" {
+       id                  = (known after apply)
+       location            = "northeurope"
+       name                = "tf121-dev-ne-nsg-web"
+       resource_group_name = "tf121-dev-ne-rg"
+       security_rule       = [
+           {
+               access                                     = "Allow"
+               destination_address_prefix                 = "*"
+               destination_address_prefixes               = []
+               destination_application_security_group_ids = []
+               destination_port_range                     = "22"
+               destination_port_ranges                    = []
+               direction                                  = "Inbound"
+               name                                       = "SSH"
+               priority                                   = 1001
+               protocol                                   = "Tcp"
+               source_address_prefix                      = "*"
+               source_address_prefixes                    = []
+               source_application_security_group_ids      = []
+               source_port_range                          = "*"
+               source_port_ranges                         = []
+                 (1 unchanged attribute hidden)
+            },
+           {
+               access                                     = "Allow"
+               destination_address_prefix                 = "*"
+               destination_address_prefixes               = []
+               destination_application_security_group_ids = []
+               destination_port_range                     = "443"
+               destination_port_ranges                    = []
+               direction                                  = "Inbound"
+               name                                       = "Allow-HTTPS"
+               priority                                   = 200
+               protocol                                   = "Tcp"
+               source_address_prefix                      = "*"
+               source_address_prefixes                    = []
+               source_application_security_group_ids      = []
+               source_port_range                          = "*"
+               source_port_ranges                         = []
+                 (1 unchanged attribute hidden)
+            },
+           {
+               access                                     = "Allow"
+               destination_address_prefix                 = "*"
+               destination_address_prefixes               = []
+               destination_application_security_group_ids = []
+               destination_port_range                     = "80"
+               destination_port_ranges                    = []
+               direction                                  = "Inbound"
+               name                                       = "Allow-HTTP"
+               priority                                   = 100
+               protocol                                   = "Tcp"
+               source_address_prefix                      = "*"
+               source_address_prefixes                    = []
+               source_application_security_group_ids      = []
+               source_port_range                          = "*"
+               source_port_ranges                         = []
+                 (1 unchanged attribute hidden)
+            },
+        ]
+       tags                = {
+           "environment" = "dev"
+           "location"    = "ne"
+           "project"     = "azTf121"
+        }
+    }
+
+  # azurerm_orchestrated_virtual_machine_scale_set.this will be created
+   resource "azurerm_orchestrated_virtual_machine_scale_set" "this" {
+       extension_operations_enabled = true
+       extensions_time_budget       = "PT1H30M"
+       id                           = (known after apply)
+       instances                    = 2
+       location                     = "northeurope"
+       max_bid_price                = -1
+       name                         = "tf121-dev-ne-vmss-01"
+       platform_fault_domain_count  = 1
+       priority                     = "Regular"
+       resource_group_name          = "tf121-dev-ne-rg"
+       single_placement_group       = (known after apply)
+       sku_name                     = "Standard_DS1_v2"
+       tags                         = {
+           "environment" = "dev"
+           "location"    = "ne"
+           "project"     = "azTf121"
+        }
+       unique_id                    = (known after apply)
+       user_data_base64             = (sensitive value)
+       zone_balance                 = false
+       zones                        = [
+           "1",
+        ]
+
+       automatic_instance_repair (known after apply)
+
+       boot_diagnostics {
+           storage_account_uri = (known after apply)
+        }
+
+       extension (known after apply)
+
+       network_interface {
+           enable_accelerated_networking = false
+           enable_ip_forwarding          = false
+           name                          = "tf121-dev-ne-vmss-nic-01"
+           primary                       = true
+
+           ip_configuration {
+               load_balancer_backend_address_pool_ids = (known after apply)
+               name                                   = "ipconfig"
+               primary                                = true
+               subnet_id                              = (known after apply)
+               version                                = "IPv4"
+            }
+        }
+
+       os_disk {
+           caching                   = "ReadWrite"
+           disk_size_gb              = (known after apply)
+           storage_account_type      = "Standard_LRS"
+           write_accelerator_enabled = false
+        }
+
+       os_profile {
+           linux_configuration {
+               admin_username                  = "azureuser"
+               computer_name_prefix            = (known after apply)
+               disable_password_authentication = true
+               patch_assessment_mode           = "ImageDefault"
+               patch_mode                      = "ImageDefault"
+               provision_vm_agent              = true
+
+               admin_ssh_key {
+                   public_key = <<-EOT
+                        ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFGfEH9WQ0XUT4m5aTQ2N7B4OP8k/mEKbsXc560aHEdO brian@pete
+                    EOT
+                   username   = "azureuser"
+                }
+            }
+        }
+
+       source_image_reference {
+           offer     = "0001-com-ubuntu-server-jammy"
+           publisher = "Canonical"
+           sku       = "22_04-lts-gen2"
+           version   = "latest"
+        }
+
+       termination_notification (known after apply)
+    }
+
+  # azurerm_private_dns_zone.this will be created
+   resource "azurerm_private_dns_zone" "this" {
+       id                                                    = (known after apply)
+       max_number_of_record_sets                             = (known after apply)
+       max_number_of_virtual_network_links                   = (known after apply)
+       max_number_of_virtual_network_links_with_registration = (known after apply)
+       name                                                  = "privatelink.database.windows.net"
+       number_of_record_sets                                 = (known after apply)
+       resource_group_name                                   = "tf121-dev-ne-rg"
+       tags                                                  = {
+           "environment" = "dev"
+           "location"    = "ne"
+           "project"     = "azTf121"
+        }
+
+       soa_record (known after apply)
+    }
+
+  # azurerm_private_dns_zone_virtual_network_link.this will be created
+   resource "azurerm_private_dns_zone_virtual_network_link" "this" {
+       id                    = (known after apply)
+       name                  = "vnet-link"
+       private_dns_zone_name = "privatelink.database.windows.net"
+       registration_enabled  = false
+       resource_group_name   = "tf121-dev-ne-rg"
+       tags                  = {
+           "environment" = "dev"
+           "location"    = "ne"
+           "project"     = "azTf121"
+        }
+       virtual_network_id    = (known after apply)
+    }
+
+  # azurerm_private_endpoint.mssql_ep will be created
+   resource "azurerm_private_endpoint" "mssql_ep" {
+       custom_dns_configs       = (known after apply)
+       id                       = (known after apply)
+       location                 = "northeurope"
+       name                     = "tf121-dev-ne-mssql_ep-01"
+       network_interface        = (known after apply)
+       private_dns_zone_configs = (known after apply)
+       resource_group_name      = "tf121-dev-ne-rg"
+       subnet_id                = (known after apply)
+       tags                     = {
+           "environment" = "dev"
+           "location"    = "ne"
+           "project"     = "azTf121"
+        }
+
+       private_dns_zone_group {
+           id                   = (known after apply)
+           name                 = "dns-zone-group"
+           private_dns_zone_ids = (known after apply)
+        }
+
+       private_service_connection {
+           is_manual_connection           = false
+           name                           = "mssql-private-serviceconnection"
+           private_connection_resource_id = (known after apply)
+           private_ip_address             = (known after apply)
+           subresource_names              = [
+               "sqlServer",
+            ]
+        }
+    }
+
+  # azurerm_public_ip.lb_pip will be created
+   resource "azurerm_public_ip" "lb_pip" {
+       allocation_method       = "Static"
+       ddos_protection_mode    = "VirtualNetworkInherited"
+       domain_name_label       = "tf121-dev-ne-rg"
+       fqdn                    = (known after apply)
+       id                      = (known after apply)
+       idle_timeout_in_minutes = 4
+       ip_address              = (known after apply)
+       ip_version              = "IPv4"
+       location                = "northeurope"
+       name                    = "tf121-dev-ne-pip-lb-01"
+       resource_group_name     = "tf121-dev-ne-rg"
+       sku                     = "Standard"
+       sku_tier                = "Regional"
+       tags                    = {
+           "environment" = "dev"
+           "location"    = "ne"
+           "project"     = "azTf121"
+        }
+       zones                   = [
+           "1",
+           "2",
+           "3",
+        ]
+    }
+
+  # azurerm_public_ip.natgw will be created
+   resource "azurerm_public_ip" "natgw" {
+       allocation_method       = "Static"
+       ddos_protection_mode    = "VirtualNetworkInherited"
+       fqdn                    = (known after apply)
+       id                      = (known after apply)
+       idle_timeout_in_minutes = 4
+       ip_address              = (known after apply)
+       ip_version              = "IPv4"
+       location                = "northeurope"
+       name                    = "tf121-dev-ne-nat-natgw"
+       resource_group_name     = "tf121-dev-ne-rg"
+       sku                     = "Standard"
+       sku_tier                = "Regional"
+       tags                    = {
+           "environment" = "dev"
+           "location"    = "ne"
+           "project"     = "azTf121"
+        }
+       zones                   = [
+           "1",
+        ]
+    }
+
+  # azurerm_storage_account.vmss_diag_sa will be created
+   resource "azurerm_storage_account" "vmss_diag_sa" {
+       access_tier                        = (known after apply)
+       account_kind                       = "StorageV2"
+       account_replication_type           = "LRS"
+       account_tier                       = "Standard"
+       allow_nested_items_to_be_public    = true
+       cross_tenant_replication_enabled   = false
+       default_to_oauth_authentication    = false
+       dns_endpoint_type                  = "Standard"
+       https_traffic_only_enabled         = true
+       id                                 = (known after apply)
+       infrastructure_encryption_enabled  = false
+       is_hns_enabled                     = false
+       large_file_share_enabled           = (known after apply)
+       local_user_enabled                 = true
+       location                           = "northeurope"
+       min_tls_version                    = "TLS1_2"
+       name                               = "tf121devnesadiag"
+       nfsv3_enabled                      = false
+       primary_access_key                 = (sensitive value)
+       primary_blob_connection_string     = (sensitive value)
+       primary_blob_endpoint              = (known after apply)
+       primary_blob_host                  = (known after apply)
+       primary_blob_internet_endpoint     = (known after apply)
+       primary_blob_internet_host         = (known after apply)
+       primary_blob_microsoft_endpoint    = (known after apply)
+       primary_blob_microsoft_host        = (known after apply)
+       primary_connection_string          = (sensitive value)
+       primary_dfs_endpoint               = (known after apply)
+       primary_dfs_host                   = (known after apply)
+       primary_dfs_internet_endpoint      = (known after apply)
+       primary_dfs_internet_host          = (known after apply)
+       primary_dfs_microsoft_endpoint     = (known after apply)
+       primary_dfs_microsoft_host         = (known after apply)
+       primary_file_endpoint              = (known after apply)
+       primary_file_host                  = (known after apply)
+       primary_file_internet_endpoint     = (known after apply)
+       primary_file_internet_host         = (known after apply)
+       primary_file_microsoft_endpoint    = (known after apply)
+       primary_file_microsoft_host        = (known after apply)
+       primary_location                   = (known after apply)
+       primary_queue_endpoint             = (known after apply)
+       primary_queue_host                 = (known after apply)
+       primary_queue_microsoft_endpoint   = (known after apply)
+       primary_queue_microsoft_host       = (known after apply)
+       primary_table_endpoint             = (known after apply)
+       primary_table_host                 = (known after apply)
+       primary_table_microsoft_endpoint   = (known after apply)
+       primary_table_microsoft_host       = (known after apply)
+       primary_web_endpoint               = (known after apply)
+       primary_web_host                   = (known after apply)
+       primary_web_internet_endpoint      = (known after apply)
+       primary_web_internet_host          = (known after apply)
+       primary_web_microsoft_endpoint     = (known after apply)
+       primary_web_microsoft_host         = (known after apply)
+       public_network_access_enabled      = true
+       queue_encryption_key_type          = "Service"
+       resource_group_name                = "tf121-dev-ne-rg"
+       secondary_access_key               = (sensitive value)
+       secondary_blob_connection_string   = (sensitive value)
+       secondary_blob_endpoint            = (known after apply)
+       secondary_blob_host                = (known after apply)
+       secondary_blob_internet_endpoint   = (known after apply)
+       secondary_blob_internet_host       = (known after apply)
+       secondary_blob_microsoft_endpoint  = (known after apply)
+       secondary_blob_microsoft_host      = (known after apply)
+       secondary_connection_string        = (sensitive value)
+       secondary_dfs_endpoint             = (known after apply)
+       secondary_dfs_host                 = (known after apply)
+       secondary_dfs_internet_endpoint    = (known after apply)
+       secondary_dfs_internet_host        = (known after apply)
+       secondary_dfs_microsoft_endpoint   = (known after apply)
+       secondary_dfs_microsoft_host       = (known after apply)
+       secondary_file_endpoint            = (known after apply)
+       secondary_file_host                = (known after apply)
+       secondary_file_internet_endpoint   = (known after apply)
+       secondary_file_internet_host       = (known after apply)
+       secondary_file_microsoft_endpoint  = (known after apply)
+       secondary_file_microsoft_host      = (known after apply)
+       secondary_location                 = (known after apply)
+       secondary_queue_endpoint           = (known after apply)
+       secondary_queue_host               = (known after apply)
+       secondary_queue_microsoft_endpoint = (known after apply)
+       secondary_queue_microsoft_host     = (known after apply)
+       secondary_table_endpoint           = (known after apply)
+       secondary_table_host               = (known after apply)
+       secondary_table_microsoft_endpoint = (known after apply)
+       secondary_table_microsoft_host     = (known after apply)
+       secondary_web_endpoint             = (known after apply)
+       secondary_web_host                 = (known after apply)
+       secondary_web_internet_endpoint    = (known after apply)
+       secondary_web_internet_host        = (known after apply)
+       secondary_web_microsoft_endpoint   = (known after apply)
+       secondary_web_microsoft_host       = (known after apply)
+       sftp_enabled                       = false
+       shared_access_key_enabled          = true
+       table_encryption_key_type          = "Service"
+       tags                               = {
+           "environment" = "dev"
+           "location"    = "ne"
+           "project"     = "azTf121"
+        }
+
+       blob_properties (known after apply)
+
+       network_rules (known after apply)
+
+       queue_properties (known after apply)
+
+       routing (known after apply)
+
+       share_properties (known after apply)
+
+       static_website (known after apply)
+    }
+
+  # azurerm_subnet.db_subnet will be created
+   resource "azurerm_subnet" "db_subnet" {
+       address_prefixes                              = [
+           "10.10.10.0/25",
+        ]
+       default_outbound_access_enabled               = true
+       id                                            = (known after apply)
+       name                                          = "tf121-dev-ne-subnet-db"
+       private_endpoint_network_policies             = "Disabled"
+       private_link_service_network_policies_enabled = true
+       resource_group_name                           = "tf121-dev-ne-rg"
+       virtual_network_name                          = "tf121-dev-ne-vnet-01"
+    }
+
+  # azurerm_subnet.web_subnet will be created
+   resource "azurerm_subnet" "web_subnet" {
+       address_prefixes                              = [
+           "10.10.10.128/25",
+        ]
+       default_outbound_access_enabled               = true
+       id                                            = (known after apply)
+       name                                          = "tf121-dev-ne-subnet-web"
+       private_endpoint_network_policies             = "Disabled"
+       private_link_service_network_policies_enabled = true
+       resource_group_name                           = "tf121-dev-ne-rg"
+       virtual_network_name                          = "tf121-dev-ne-vnet-01"
+    }
+
+  # azurerm_subnet_nat_gateway_association.this will be created
+   resource "azurerm_subnet_nat_gateway_association" "this" {
+       id             = (known after apply)
+       nat_gateway_id = (known after apply)
+       subnet_id      = (known after apply)
+    }
+
+  # azurerm_subnet_network_security_group_association.web_nsg will be created
+   resource "azurerm_subnet_network_security_group_association" "web_nsg" {
+       id                        = (known after apply)
+       network_security_group_id = (known after apply)
+       subnet_id                 = (known after apply)
+    }
+
+  # azurerm_virtual_network.this will be created
+   resource "azurerm_virtual_network" "this" {
+       address_space       = [
+           "10.10.10.0/23",
+        ]
+       dns_servers         = (known after apply)
+       guid                = (known after apply)
+       id                  = (known after apply)
+       location            = "northeurope"
+       name                = "tf121-dev-ne-vnet-01"
+       resource_group_name = "tf121-dev-ne-rg"
+       subnet              = (known after apply)
+    }
+
+Plan: 22 to add, 0 to change, 0 to destroy.
+
+Changes to Outputs:
+   azurerm_mssql_database_id = (known after apply)
+   azurerm_mssql_server_id   = (known after apply)
+   db_subnet_id              = (known after apply)
+   lb_pip_id                 = (known after apply)
+   rg_id                     = "/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg"
+   vmss_id                   = (known after apply)
+   vnet_id                   = (known after apply)
+   web_nsg_id                = (known after apply)
+   web_subnet_id             = (known after apply)
+azurerm_private_dns_zone.this: Creating...
+azurerm_virtual_network.this: Creating...
+azurerm_public_ip.lb_pip: Creating...
+azurerm_mssql_server.this: Creating...
+azurerm_nat_gateway.this: Creating...
+azurerm_public_ip.natgw: Creating...
+azurerm_network_security_group.web_nsg: Creating...
+azurerm_storage_account.vmss_diag_sa: Creating...
+azurerm_network_security_group.web_nsg: Creation complete after 2s [id=/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Network/networkSecurityGroups/tf121-dev-ne-nsg-web]
+azurerm_public_ip.natgw: Creation complete after 5s [id=/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Network/publicIPAddresses/tf121-dev-ne-nat-natgw]
+azurerm_virtual_network.this: Creation complete after 5s [id=/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Network/virtualNetworks/tf121-dev-ne-vnet-01]
+azurerm_subnet.db_subnet: Creating...
+azurerm_subnet.web_subnet: Creating...
+azurerm_public_ip.lb_pip: Creation complete after 7s [id=/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Network/publicIPAddresses/tf121-dev-ne-pip-lb-01]
+azurerm_lb.lb: Creating...
+azurerm_subnet.db_subnet: Creation complete after 4s [id=/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Network/virtualNetworks/tf121-dev-ne-vnet-01/subnets/tf121-dev-ne-subnet-db]
+azurerm_private_dns_zone.this: Still creating... [10s elapsed]
+azurerm_mssql_server.this: Still creating... [10s elapsed]
+azurerm_nat_gateway.this: Still creating... [10s elapsed]
+azurerm_storage_account.vmss_diag_sa: Still creating... [10s elapsed]
+azurerm_subnet.web_subnet: Creation complete after 9s [id=/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Network/virtualNetworks/tf121-dev-ne-vnet-01/subnets/tf121-dev-ne-subnet-web]
+azurerm_subnet_network_security_group_association.web_nsg: Creating...
+azurerm_lb.lb: Still creating... [10s elapsed]
+azurerm_subnet_network_security_group_association.web_nsg: Creation complete after 5s [id=/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Network/virtualNetworks/tf121-dev-ne-vnet-01/subnets/tf121-dev-ne-subnet-web]
+azurerm_lb.lb: Creation complete after 12s [id=/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Network/loadBalancers/tf121-dev-ne-lb-01]
+azurerm_lb_backend_address_pool.bepool: Creating...
+azurerm_lb_probe.this: Creating...
+azurerm_nat_gateway.this: Still creating... [20s elapsed]
+azurerm_mssql_server.this: Still creating... [20s elapsed]
+azurerm_private_dns_zone.this: Still creating... [20s elapsed]
+azurerm_storage_account.vmss_diag_sa: Still creating... [20s elapsed]
+azurerm_nat_gateway.this: Creation complete after 22s [id=/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Network/natGateways/tf121-dev-ne-nat_gateway-01]
+azurerm_subnet_nat_gateway_association.this: Creating...
+azurerm_nat_gateway_public_ip_association.this: Creating...
+azurerm_subnet_nat_gateway_association.this: Creation complete after 5s [id=/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Network/virtualNetworks/tf121-dev-ne-vnet-01/subnets/tf121-dev-ne-subnet-web]
+azurerm_lb_backend_address_pool.bepool: Still creating... [10s elapsed]
+azurerm_lb_probe.this: Still creating... [10s elapsed]
+azurerm_mssql_server.this: Still creating... [30s elapsed]
+azurerm_private_dns_zone.this: Still creating... [30s elapsed]
+azurerm_storage_account.vmss_diag_sa: Still creating... [30s elapsed]
+azurerm_lb_probe.this: Creation complete after 12s [id=/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Network/loadBalancers/tf121-dev-ne-lb-01/probes/http-probe]
+azurerm_nat_gateway_public_ip_association.this: Still creating... [10s elapsed]
+azurerm_private_dns_zone.this: Creation complete after 33s [id=/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Network/privateDnsZones/privatelink.database.windows.net]
+azurerm_private_dns_zone_virtual_network_link.this: Creating...
+azurerm_lb_backend_address_pool.bepool: Creation complete after 14s [id=/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Network/loadBalancers/tf121-dev-ne-lb-01/backendAddressPools/BackendAddressPool]
+azurerm_lb_nat_rule.ssh: Creating...
+azurerm_lb_rule.lb: Creating...
+azurerm_nat_gateway_public_ip_association.this: Creation complete after 16s [id=/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Network/natGateways/tf121-dev-ne-nat_gateway-01|/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Network/publicIPAddresses/tf121-dev-ne-nat-natgw]
+azurerm_lb_nat_rule.ssh: Creation complete after 6s [id=/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Network/loadBalancers/tf121-dev-ne-lb-01/inboundNatRules/ssh]
+azurerm_mssql_server.this: Still creating... [40s elapsed]
+azurerm_storage_account.vmss_diag_sa: Still creating... [40s elapsed]
+azurerm_private_dns_zone_virtual_network_link.this: Still creating... [10s elapsed]
+azurerm_lb_rule.lb: Creation complete after 10s [id=/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Network/loadBalancers/tf121-dev-ne-lb-01/loadBalancingRules/http]
+azurerm_mssql_server.this: Still creating... [50s elapsed]
+azurerm_storage_account.vmss_diag_sa: Still creating... [50s elapsed]
+azurerm_private_dns_zone_virtual_network_link.this: Still creating... [20s elapsed]
+azurerm_mssql_server.this: Still creating... [1m0s elapsed]
+azurerm_storage_account.vmss_diag_sa: Still creating... [1m0s elapsed]
+azurerm_private_dns_zone_virtual_network_link.this: Still creating... [30s elapsed]
+azurerm_storage_account.vmss_diag_sa: Creation complete after 1m4s [id=/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Storage/storageAccounts/tf121devnesadiag]
+azurerm_orchestrated_virtual_machine_scale_set.this: Creating...
+azurerm_private_dns_zone_virtual_network_link.this: Creation complete after 33s [id=/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Network/privateDnsZones/privatelink.database.windows.net/virtualNetworkLinks/vnet-link]
+azurerm_mssql_server.this: Still creating... [1m10s elapsed]
+azurerm_orchestrated_virtual_machine_scale_set.this: Still creating... [10s elapsed]
+azurerm_mssql_server.this: Still creating... [1m20s elapsed]
+azurerm_mssql_server.this: Creation complete after 1m21s [id=/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Sql/servers/tf121-dev-ne-mssql-server-01]
+azurerm_private_endpoint.mssql_ep: Creating...
+azurerm_mssql_database.this: Creating...
+azurerm_orchestrated_virtual_machine_scale_set.this: Still creating... [20s elapsed]
+azurerm_private_endpoint.mssql_ep: Still creating... [10s elapsed]
+azurerm_mssql_database.this: Still creating... [10s elapsed]
+azurerm_orchestrated_virtual_machine_scale_set.this: Still creating... [30s elapsed]
+azurerm_private_endpoint.mssql_ep: Still creating... [20s elapsed]
+azurerm_mssql_database.this: Still creating... [20s elapsed]
+azurerm_orchestrated_virtual_machine_scale_set.this: Still creating... [40s elapsed]
+azurerm_private_endpoint.mssql_ep: Still creating... [30s elapsed]
+azurerm_mssql_database.this: Still creating... [30s elapsed]
+azurerm_orchestrated_virtual_machine_scale_set.this: Still creating... [50s elapsed]
+azurerm_private_endpoint.mssql_ep: Still creating... [40s elapsed]
+azurerm_mssql_database.this: Still creating... [40s elapsed]
+azurerm_orchestrated_virtual_machine_scale_set.this: Still creating... [1m0s elapsed]
+azurerm_orchestrated_virtual_machine_scale_set.this: Creation complete after 1m3s [id=/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Compute/virtualMachineScaleSets/tf121-dev-ne-vmss-01]
+azurerm_mssql_database.this: Still creating... [50s elapsed]
+azurerm_private_endpoint.mssql_ep: Still creating... [50s elapsed]
+azurerm_private_endpoint.mssql_ep: Still creating... [1m0s elapsed]
+azurerm_mssql_database.this: Still creating... [1m0s elapsed]
+azurerm_mssql_database.this: Still creating... [1m10s elapsed]
+azurerm_private_endpoint.mssql_ep: Still creating... [1m10s elapsed]
+azurerm_mssql_database.this: Still creating... [1m20s elapsed]
+azurerm_private_endpoint.mssql_ep: Still creating... [1m20s elapsed]
+azurerm_private_endpoint.mssql_ep: Still creating... [1m30s elapsed]
+azurerm_mssql_database.this: Still creating... [1m30s elapsed]
+azurerm_mssql_database.this: Still creating... [1m40s elapsed]
+azurerm_private_endpoint.mssql_ep: Still creating... [1m40s elapsed]
+azurerm_private_endpoint.mssql_ep: Creation complete after 1m44s [id=/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Network/privateEndpoints/tf121-dev-ne-mssql_ep-01]
+azurerm_mssql_database.this: Still creating... [1m50s elapsed]
+azurerm_mssql_database.this: Still creating... [2m0s elapsed]
+azurerm_mssql_database.this: Creation complete after 2m5s [id=/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Sql/servers/tf121-dev-ne-mssql-server-01/databases/tf121-dev-ne-mssql-database-01]
+
+Apply complete! Resources: 22 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+azurerm_mssql_database_id = "/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Sql/servers/tf121-dev-ne-mssql-server-01/databases/tf121-dev-ne-mssql-database-01"
+azurerm_mssql_server_id = "/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Sql/servers/tf121-dev-ne-mssql-server-01"
+db_subnet_id = "/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Network/virtualNetworks/tf121-dev-ne-vnet-01/subnets/tf121-dev-ne-subnet-db"
+lb_pip_id = "/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Network/publicIPAddresses/tf121-dev-ne-pip-lb-01"
+rg_id = "/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg"
+vmss_id = "/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Compute/virtualMachineScaleSets/tf121-dev-ne-vmss-01"
+vnet_id = "/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Network/virtualNetworks/tf121-dev-ne-vnet-01"
+web_nsg_id = "/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Network/networkSecurityGroups/tf121-dev-ne-nsg-web"
+web_subnet_id = "/subscriptions/c568096a-90af-455c-91d0-31314d3fbbf5/resourceGroups/tf121-dev-ne-rg/providers/Microsoft.Network/virtualNetworks/tf121-dev-ne-vnet-01/subnets/tf121-dev-ne-subnet-web"
